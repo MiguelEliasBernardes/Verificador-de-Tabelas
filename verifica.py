@@ -10,7 +10,7 @@ def verifica_despesa():
 
     for nome_aba, df in tabela.items():
         for index,linha in df.iterrows():
-            if linha.astype(str).str.contains('DESPESA', case=False, na=False).any():
+            if linha.astype(str).str.contains('DESPESA NL2', case=False, na=False).any():
                 valor_5 = linha.iloc[5]
                 valor_7 = linha.iloc[7]
                 valor_9 = linha.iloc[9]      
@@ -44,7 +44,7 @@ def verifica_despesa():
 def ajusta_lista(dado):
     map_dados = ''
     for itens in dado:
-        map_dados +="\n" + itens["nome_dado"] + itens["valor_dado"]
+        map_dados +="\n" + itens["nome_dado"] + " - " + itens["valor_dado"]
 
     return map_dados
 
