@@ -10,7 +10,6 @@ def main(page: ft.Page):
 
     data = verifica.verifica_despesa()
     dados = verifica.ajusta_lista(data["array"])
-    print(dados)
 
     # Criando um contêiner de rolagem
     scroll_container = ft.Column(scroll='auto', expand=True)
