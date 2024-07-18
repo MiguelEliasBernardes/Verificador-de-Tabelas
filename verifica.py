@@ -1,42 +1,68 @@
 import pandas as pd
-import os
-
-tabela = pd.read_excel(f"JANEIRO.xls", sheet_name=None)
-
 arr = []
 
-def verifica_despesa():
-    total_despesa = 0
+def verifica_despesa(nome_tabela,valor_pesquisa):
+    
+        tabela = pd.read_excel(f"{nome_tabela}.xls", sheet_name=None)
 
-    for nome_aba, df in tabela.items():
-        for index,linha in df.iterrows():
-            if linha.astype(str).str.contains('DESPESA', case=False, na=False).any():
-                valor_5 = linha.iloc[5]
-                valor_7 = linha.iloc[7]
-                valor_9 = linha.iloc[9]      
+        total_despesa = 0
 
-                if pd.isna(valor_5):
-                    if pd.isna(valor_7):
-                        total_despesa += valor_9
-                        ##print(f"{linha.iloc[1]} - R$ {valor_9}")
-                        arr.append({"nome_dado": linha.iloc[1],
-                                    "valor_dado": "R$ " + str(valor_9) })
+        for nome_aba, df in tabela.items():
+            for index,linha in df.iterrows():
+                if linha.astype(str).str.contains(f'{valor_pesquisa}', case=False, na=False).any():
+                    
+                    
+                    repasse = "DEPÓSITO"
+
+                    if repasse in valor_pesquisa:
+                        valor_2 = linha.iloc[2]
+                        valor_5 = linha.iloc[4]
+                        valor_7 = linha.iloc[6]
+                        valor_9 = linha.iloc[8]
+                        valor_10 = linha.iloc[10]
 
                     else:
-                        total_despesa += valor_7
-                        arr.append({"nome_dado": linha.iloc[1],
-                                    "valor_dado": "R$ " + str(valor_7) })                 
-                else:
-                    
-                    total_despesa += valor_5
-                    ##print(f"{linha.iloc[1]} - R$ {valor_5}")
-                    arr.append({"nome_dado": linha.iloc[1],
-                                    "valor_dado": "R$ " + str(valor_5) })
-                          
-    total = f"TOTAL = R$ {round(total_despesa,2)}"
+                        valor_2 = linha.iloc[3]
+                        valor_5 = linha.iloc[5]
+                        valor_7 = linha.iloc[7]
+                        valor_9 = linha.iloc[9]
+                        valor_10 = linha.iloc[11]      
     
-    return {"total": total,
-            "array": arr}
+                    if pd.isna(valor_2):
+                        if pd.isna(valor_5):
+                            if pd.isna(valor_7):
+                                if pd.isna(valor_9):
+                                    total_despesa += valor_10
+                                    #print(f"{linha.iloc[1]} - R$ {valor_10}")
+                                    arr.append({"nome_dado": linha.iloc[1],
+                                                "valor_dado": "R$ " + str(valor_10) })
+                                else:
+                                    total_despesa += valor_9
+                                    #print(f"{linha.iloc[1]} - R$ {valor_9}")
+                                    arr.append({"nome_dado": linha.iloc[1],
+                                                "valor_dado": "R$ " + str(valor_9) })
+
+                            else:
+                                total_despesa += valor_7
+                                #print(f"{linha.iloc[1]} - R$ {valor_7}")
+                                arr.append({"nome_dado": linha.iloc[1],
+                                            "valor_dado": "R$ " + str(valor_7) })                 
+                        else:    
+                            total_despesa += valor_5
+                            #print(f"{linha.iloc[1]} - R$ {valor_5}")
+                            arr.append({"nome_dado": linha.iloc[1],
+                                            "valor_dado": "R$ " + str(valor_5) })
+
+                    else:
+                        total_despesa += valor_2
+                        #print(f"{linha.iloc[1]} - R$ {valor_2}")
+                        arr.append({"nome_dado": linha.iloc[1],
+                                    "valor_dado": "R$ " + str(valor_2) })
+                                
+        total = f"TOTAL = R$ {round(total_despesa,2)}"
+            
+        return {"total": total,
+                "array": arr}     
 
 
 def ajusta_lista(dado):
@@ -45,4 +71,3 @@ def ajusta_lista(dado):
         map_dados +="\n" + itens["nome_dado"] + " - " + itens["valor_dado"]
 
     return map_dados
-
