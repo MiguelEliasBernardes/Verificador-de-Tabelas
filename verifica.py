@@ -1,7 +1,7 @@
 import pandas as pd
 import os
 
-tabela = pd.read_excel('JANEIRO.xls', sheet_name=None)
+tabela = pd.read_excel(f"JANEIRO.xls", sheet_name=None)
 
 arr = []
 
@@ -10,7 +10,7 @@ def verifica_despesa():
 
     for nome_aba, df in tabela.items():
         for index,linha in df.iterrows():
-            if linha.astype(str).str.contains('DESPESA NL2', case=False, na=False).any():
+            if linha.astype(str).str.contains('DESPESA', case=False, na=False).any():
                 valor_5 = linha.iloc[5]
                 valor_7 = linha.iloc[7]
                 valor_9 = linha.iloc[9]      
@@ -34,8 +34,6 @@ def verifica_despesa():
                                     "valor_dado": "R$ " + str(valor_5) })
                           
     total = f"TOTAL = R$ {round(total_despesa,2)}"
-    ##print(dados)
-
     
     return {"total": total,
             "array": arr}
@@ -48,5 +46,3 @@ def ajusta_lista(dado):
 
     return map_dados
 
-
-verifica_despesa()
