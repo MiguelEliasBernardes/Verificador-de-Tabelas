@@ -51,9 +51,11 @@ def main(page: ft.Page):
         cnv.line(20, 780, 565,780)
         
         pos = posicao()
-         
-        cnv.setFont('Helvetica-Oblique',28)  
-        cnv.drawString(30,pos - 40, f'{data['total']}')
+        
+        cnv.line(20, pos, 565,pos)
+        cnv.setFont('Helvetica-Oblique',28)
+        cnv.drawString(30,pos - 40, f'TOTAL: ')  
+        cnv.drawString(370,pos - 40, f'R$ {data['total']}')
         
         cnv.save()
     
@@ -78,7 +80,7 @@ def main(page: ft.Page):
                 scroll_container.controls.append(ft.Text("Nenhum dado com esse nome!",size=25))
                 
                 texto_total = ft.Text(
-                    f"{data['total']}",
+                    f"R$ {data['total']}",
                     width=500,
                     height=100,
                     size=30,
@@ -115,7 +117,7 @@ def main(page: ft.Page):
             scroll_container.controls.append(ft.Text(dados,size=17))
             
             texto_total = ft.Text(
-                f"MÊS: {nome_tabela.value} - {data['total']}",
+                f"MÊS: {nome_tabela.value} - R$ {data['total']}",
                 width=550,
                 height=100,
                 size=30,

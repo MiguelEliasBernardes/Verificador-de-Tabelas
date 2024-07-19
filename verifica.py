@@ -61,7 +61,7 @@ def verifica_despesa(nome_tabela,valor_pesquisa):
                         arr.append({"nome_dado": linha.iloc[1],
                                     "valor_dado": "R$ " + str(valor_2) })
                                 
-        total = f"TOTAL = R$ {total_despesa:,.2f}"
+        total = f"{total_despesa:,.2f}"
             
         return {"total": total,
                 "array": arr}     
