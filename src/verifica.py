@@ -39,32 +39,34 @@ def verifica_despesa(nome_tabela,ano,valor_pesquisa):
                                     total_despesa += valor_10
                                     #print(f"{linha.iloc[1]} - R$ {valor_10}")
                                     arr.append({"nome_dado": linha.iloc[1],
-                                                "valor_dado": "R$ " + str(valor_10) })
+                                                "valor_dado": f"R$ {valor_10:,.2f}".replace(',', 'TEMP').replace('.', ',').replace('TEMP', '.')})
                                 else:
                                     total_despesa += valor_9
                                     #print(f"{linha.iloc[1]} - R$ {valor_9}")
                                     arr.append({"nome_dado": linha.iloc[1],
-                                                "valor_dado": "R$ " + str(valor_9) })
+                                                "valor_dado": f"R$ {valor_9:,.2f}".replace(',', 'TEMP').replace('.', ',').replace('TEMP', '.')})
 
                             else:
                                 total_despesa += valor_7
                                 #print(f"{linha.iloc[1]} - R$ {valor_7}")
                                 arr.append({"nome_dado": linha.iloc[1],
-                                            "valor_dado": "R$ " + str(valor_7) })                 
+                                            "valor_dado": f"R$ {valor_7:,.2f}".replace(',', 'TEMP').replace('.', ',').replace('TEMP', '.')})                 
                         else:    
                             total_despesa += valor_5
                             #print(f"{linha.iloc[1]} - R$ {valor_5}")
                             arr.append({"nome_dado": linha.iloc[1],
-                                            "valor_dado": "R$ " + str(valor_5) })
-
+                                            "valor_dado": f"R$ {valor_5:,.2f}".replace(',', 'TEMP').replace('.', ',').replace('TEMP', '.')}) 
                     else:
                         total_despesa += valor_2
                         #print(f"{linha.iloc[1]} - R$ {valor_2}")
                         arr.append({"nome_dado": linha.iloc[1],
-                                    "valor_dado": "R$ " + str(valor_2) })
-                                
+                                    "valor_dado":f"R$ {valor_5:,.2f}".replace(',', 'TEMP').replace('.', ',').replace('TEMP', '.')})
+                   
+                                     
         total = f"{total_despesa:,.2f}"
-            
+        total = str(total).replace('.',',',1)
+        total = str(total).replace(',','.',1)
+        
         return {"total": total,
                 "array": arr}     
 

@@ -53,7 +53,7 @@ def main(page: ft.Page):
         
         cnv = canvas.Canvas(caminho_pdf, pagesize=A4)
         cnv.setFont('Helvetica-Oblique',18)
-        cnv.drawString(230,800,f"MÊS: {mes}")
+        cnv.drawString(200,800,f"MÊS: {mes} - {ano}")
         cnv.line(20, 780, 565,780)
         
         pos = posicao()
