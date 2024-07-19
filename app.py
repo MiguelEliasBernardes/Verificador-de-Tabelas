@@ -1,14 +1,32 @@
 import flet as ft
 import verifica
 import time
+from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import A4 
+
+
 
 def main(page: ft.Page):
     
+    def salvar_pdf(mes,pesquisa):
+        nome_pesquisa = ''
+        for i in pesquisa:
+            if i == ' ':
+                nome_pesquisa += "-"
+            else:
+                nome_pesquisa += i
+        
+        cnv = canvas.Canvas(f"{nome_pesquisa}--{mes}.pdf")
+        cnv.drawString(0,0,"TEST")
+        cnv.save()
+    
+    
     def att(data):
+                
         dados = verifica.ajusta_lista(data["array"])
-
+        
         controls = ft.Column(
-            controls=[nome_tabela, pesquisa, enviar_dados],
+            controls=[nome_tabela, pesquisa, enviar_dados,salva],
             spacing=30,
             )
                     
@@ -19,47 +37,80 @@ def main(page: ft.Page):
             expand=False,
         )
 
-
-
         if data["total"] == "TOTAL = R$ 0":
-            scroll_container.controls.append(ft.Text("Nenhum dado com esse nome!",size=25))
+                scroll_container.controls.append(ft.Text("Nenhum dado com esse nome!",size=25))
+                
+                texto_total = ft.Text(
+                    f"{data['total']}",
+                    width=500,
+                    height=100,
+                    size=30,
+                    color='blue'
+                )
+            
+                page.controls.clear()
 
-        else:
-            scroll_container.controls.append(ft.Text(dados,size=17))
-
-        texto_total = ft.Text(
-            f"{data['total']}",
-            width=500,
-            height=100,
-            size=30,
-            color='blue'
-        )
-
-
-        page_layout = ft.Column(
-            controls=[
-                ft.Row(
+                page_layout = ft.Column(
                     controls=[
-                        controls,
-                        scroll_container,
+                        ft.Row(
+                            controls=[
+                                controls,
+                                scroll_container,
+                            ],
+                            alignment="start",
+                            spacing=50,
+                        ),
+                        ft.Row(
+                            controls=[texto_total],
+                            alignment="end",
+                            spacing=40,
+                            
+                        )
                     ],
                     alignment="start",
-                    spacing=50,
-                ),
-                ft.Row(
-                    controls=[texto_total],
-                    alignment="end",
-                    spacing=40,
+                    spacing=20,
                 )
-            ],
-            alignment="start",
-            spacing=20,
-        )
-                    
-        page.add(page_layout)
-        page.update()
+                            
+                page.add(page_layout)
+                page.update()
         
+        else:
+            scroll_container.controls.append(ft.Text(dados,size=17))
+            
+            texto_total = ft.Text(
+                f"MÊS: {nome_tabela.value} - {data['total']}",
+                width=550,
+                height=100,
+                size=30,
+                color='blue'
+            )
+           
+            page.controls.clear()
 
+            page_layout = ft.Column(
+                controls=[
+                    ft.Row(
+                        controls=[
+                            controls,
+                            scroll_container,
+                        ],
+                        alignment="start",
+                        spacing=50,
+                    ),
+                    ft.Row(
+                        controls=[texto_total],
+                        alignment="end",
+                        spacing=40,
+                        
+                    )
+                ],
+                alignment="start",
+                spacing=20,
+            )
+                        
+            page.add(page_layout)
+            page.update()
+        
 
     def erro_nome():
         nome_tabela.label = "Digite uma Tabela"
@@ -77,40 +128,41 @@ def main(page: ft.Page):
 
         try:
             page.remove(centralizar_verticalmente)
-
+            #print("ent")
             att(data)
             
         except(ValueError):
+            #print('sai')
             att(data)
 
 
-    def imprime_dados(e):
+    def imprime_dados():
         
-        #try:
+        try:
             valor_nome = nome_tabela.value
             valor_pesquisa = pesquisa.value
-            print(valor_nome)
-            print(valor_pesquisa)
-           
+            
             if(valor_nome == ''):
                 erro_nome()
                 
             else:
                 
-                #try:
-                data = verifica.verifica_despesa(valor_nome, valor_pesquisa)
+                try:
+                    data = verifica.verifica_despesa(valor_nome, valor_pesquisa)
+                    #print(data)
 
-                if data == FileNotFoundError:
+                    if data == FileNotFoundError:
+                        erro_nome()
+
+                    else:
+                        cria_scroll(data)
+                except(FileNotFoundError):
                     erro_nome()
-
-                else:
-                    cria_scroll(data)
-                #except(FileNotFoundError):
-                    #erro_nome()
         
         
-        #except(ValueError):
-            #erro_nome()
+        except(ValueError):
+            erro_nome()
+    
     
     page.title = "Verifica Tabelas"
     page.theme_mode = ft.ThemeMode.DARK
@@ -137,17 +189,24 @@ def main(page: ft.Page):
     
     
     enviar_dados = ft.ElevatedButton("Fazer pesquisa",
-                                     on_click=imprime_dados,
+                                     on_click=lambda _:imprime_dados(),
                                      width=300,
                                      bgcolor='blue',
                                      color='white')
     
     
+    salva = ft.ElevatedButton("Salvar em PDF",
+                                     on_click=lambda _:salvar_pdf("JANEIRO","DESPESA NL2"),
+                                     width=300,
+                                     bgcolor='blue',
+                                     color='white')
+    
     centralizar_verticalmente = ft.Column(
         [
             nome_tabela,
             pesquisa,
-            enviar_dados
+            enviar_dados,
+            salva
         ],
         alignment=ft.MainAxisAlignment.CENTER,
         height=500,

@@ -1,11 +1,13 @@
 import pandas as pd
-arr = []
+
 
 def verifica_despesa(nome_tabela,valor_pesquisa):
     
         tabela = pd.read_excel(f"{nome_tabela}.xls", sheet_name=None)
 
         total_despesa = 0
+        
+        arr = []
 
         for nome_aba, df in tabela.items():
             for index,linha in df.iterrows():
@@ -59,7 +61,7 @@ def verifica_despesa(nome_tabela,valor_pesquisa):
                         arr.append({"nome_dado": linha.iloc[1],
                                     "valor_dado": "R$ " + str(valor_2) })
                                 
-        total = f"TOTAL = R$ {round(total_despesa,2)}"
+        total = f"TOTAL = R$ {total_despesa:,.2f}"
             
         return {"total": total,
                 "array": arr}     
