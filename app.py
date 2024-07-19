@@ -3,12 +3,41 @@ import verifica
 import time
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import A4 
+from reportlab.fonts import *
 
 
 
 def main(page: ft.Page):
     
     def salvar_pdf(mes,pesquisa):
+        
+        def posicao():
+            pos = 740
+            var = 0
+            primeira_pagina = True
+            for itens in data['array']:
+                if pos < 40:  # Verifica se a posição está muito baixa
+                    cnv.showPage()  # Cria uma nova página
+                    pos = 800  # Reseta a posição para a nova página
+                    
+                    if primeira_pagina:
+                        primeira_pagina = False
+                    else:
+                        cnv.setFont('Helvetica-Oblique', 12)
+
+                cnv.setFont('Helvetica-Oblique', 12)
+                cnv.drawString(30, pos, f'{itens["nome_dado"]}')
+                cnv.drawString(480, pos, f'{itens["valor_dado"]}')
+                pos -= 20
+                var = pos
+            
+            print(var)
+            return var
+        
+        data = verifica.verifica_despesa(mes, pesquisa)
+        dados = verifica.ajusta_lista(data["array"])
+        
+        
         nome_pesquisa = ''
         for i in pesquisa:
             if i == ' ':
@@ -17,7 +46,15 @@ def main(page: ft.Page):
                 nome_pesquisa += i
         
         cnv = canvas.Canvas(f"{nome_pesquisa}--{mes}.pdf")
-        cnv.drawString(0,0,"TEST")
+        cnv.setFont('Helvetica-Oblique',18)
+        cnv.drawString(230,800,f"MÊS: {mes}")
+        cnv.line(20, 780, 565,780)
+        
+        pos = posicao()
+         
+        cnv.setFont('Helvetica-Oblique',28)  
+        cnv.drawString(30,pos - 40, f'{data['total']}')
+        
         cnv.save()
     
     
@@ -149,7 +186,6 @@ def main(page: ft.Page):
                 
                 try:
                     data = verifica.verifica_despesa(valor_nome, valor_pesquisa)
-                    #print(data)
 
                     if data == FileNotFoundError:
                         erro_nome()
@@ -196,7 +232,7 @@ def main(page: ft.Page):
     
     
     salva = ft.ElevatedButton("Salvar em PDF",
-                                     on_click=lambda _:salvar_pdf("JANEIRO","DESPESA NL2"),
+                                     on_click=lambda _:salvar_pdf(nome_tabela.value,pesquisa.value),
                                      width=300,
                                      bgcolor='blue',
                                      color='white')
