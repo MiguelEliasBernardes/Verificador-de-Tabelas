@@ -16,9 +16,11 @@ def verifica_despesa(nome_tabela,ano,valor_pesquisa):
                 if linha.astype(str).str.contains(f'{valor_pesquisa}', case=False, na=False).any():
                     
                     
-                    repasse = "DEPÓSITO"
+                    deposito = "DEPÓSITO"
+                    rendimento = "RENDIMENTO"
+                    caixa = "CX"
 
-                    if repasse in valor_pesquisa:
+                    if deposito in valor_pesquisa or rendimento in valor_pesquisa or caixa in valor_pesquisa:
                         valor_2 = linha.iloc[2]
                         valor_5 = linha.iloc[4]
                         valor_7 = linha.iloc[6]
