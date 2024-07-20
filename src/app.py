@@ -6,15 +6,19 @@ from reportlab.lib.pagesizes import A4
 from reportlab.fonts import *
 import getpass
 import os
-import customtkinter as ctk
 
 
 def main(page: ft.Page):
     user_windows = getpass.getuser()
 
+    if os.path.exists(f"C:\\Users\\{user_windows}\\Desktop\\PDF") == False or os.path.exists(f"C:\\Users\\{user_windows}\\Desktop\\TABELAS") == False:
+        os.makedirs(f"C:\\Users\\{user_windows}\\Desktop\\PDF")
+        os.makedirs(f"C:\\Users\\{user_windows}\\Desktop\\TABELAS")
+
     def salvar_pdf(mes,ano,pesquisa):
 
         def posicao():
+            
             pos = 740
             var = 0
             primeira_pagina = True
@@ -35,37 +39,47 @@ def main(page: ft.Page):
                 var = pos
             return var
         
-        data = verifica.verifica_despesa(mes,ano, pesquisa)
-        dados = verifica.ajusta_lista(data["array"])
-        
-        
-        nome_pesquisa = ''
-        for i in pesquisa:
-            if i == ' ':
-                nome_pesquisa += "-"
-            else:
-                nome_pesquisa += i
+        try:
+            data = verifica.verifica_despesa(mes,ano, pesquisa)
+            dados = verifica.ajusta_lista(data["array"])
+            
+            
+            nome_pesquisa = ''
+            for i in pesquisa:
+                if i == ' ':
+                    nome_pesquisa += "-"
+                else:
+                    nome_pesquisa += i
 
-        caminho_pasta = f"C:\\Users\\{user_windows}\\Desktop\\PDF"
-        if not os.path.exists(caminho_pasta):
-            os.makedirs(caminho_pasta)
-        caminho_pdf = os.path.join(caminho_pasta, f"{nome_pesquisa}--{mes}.pdf")
+            caminho_pasta = f"C:\\Users\\{user_windows}\\Desktop\\PDF"
+            if not os.path.exists(caminho_pasta):
+                os.makedirs(caminho_pasta)
+            caminho_pdf = os.path.join(caminho_pasta, f"{nome_pesquisa}--{mes}.pdf")
         
-        
-        cnv = canvas.Canvas(caminho_pdf, pagesize=A4)
-        cnv.setFont('Helvetica-Oblique',18)
-        cnv.drawString(200,800,f"MÊS: {mes} - {ano}")
-        cnv.line(20, 780, 565,780)
-        
-        pos = posicao()
-        
-        cnv.line(20, pos, 565,pos)
-        cnv.setFont('Helvetica-Oblique',28)
-        cnv.drawString(30,pos - 40, f'TOTAL: ')  
-        cnv.drawString(370,pos - 40, f'R$ {data['total']}')
+            cnv = canvas.Canvas(caminho_pdf, pagesize=A4)
+            cnv.setFont('Helvetica-Oblique',18)
+            cnv.drawString(200,800,f"MÊS: {mes} - {ano}")
+            cnv.line(20, 780, 565,780)
+            
+            pos = posicao()
+            
+            cnv.line(20, pos, 565,pos)
+            cnv.setFont('Helvetica-Oblique',28)
+            cnv.drawString(30,pos - 40, f'TOTAL: ')  
+            cnv.drawString(370,pos - 40, f'R$ {data['total']}')
 
-        cnv.showPage()
-        cnv.save()
+            cnv.showPage()
+            cnv.save()
+        except(FileNotFoundError):
+            dlg_modal = ft.AlertDialog(
+                modal=True,
+                title=ft.Text("ERRO AO GERAR PDF"),
+                actions_alignment=ft.MainAxisAlignment.END
+            )
+
+            page.add(dlg_modal)
+            page.update()
+
     
     
     def att(data):
