@@ -77,5 +77,3 @@ def ajusta_lista(dado):
         map_dados +="\n" + itens["nome_dado"] + " - " + itens["valor_dado"]
 
     return map_dados
-
-

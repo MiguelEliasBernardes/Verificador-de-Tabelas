@@ -10,6 +10,10 @@ import os
 
 def main(page: ft.Page):
     user_windows = getpass.getuser()
+    
+    def retira_modal(e):
+                dlg_modal.open = False
+                page.update()
 
     if os.path.exists(f"C:\\Users\\{user_windows}\\Desktop\\PDF") == False or os.path.exists(f"C:\\Users\\{user_windows}\\Desktop\\TABELAS") == False:
         os.makedirs(f"C:\\Users\\{user_windows}\\Desktop\\PDF")
@@ -70,24 +74,21 @@ def main(page: ft.Page):
 
             cnv.showPage()
             cnv.save()
-        except(FileNotFoundError):
-            dlg_modal = ft.AlertDialog(
-                modal=True,
-                title=ft.Text("ERRO AO GERAR PDF"),
-                actions_alignment=ft.MainAxisAlignment.END
-            )
-
-            page.add(dlg_modal)
+            
+            dlg_modal.title = ft.Text("PDF SALVO COM SUCESSO!", color='green')
+            dlg_modal.content = ft.Text("Salvo na pasta PDF na área de trabalho")
+            dlg_modal.open = True
             page.update()
-
-    
-    
+            
+        except(FileNotFoundError):
+            pass
+   
     def att(data):
                 
         dados = verifica.ajusta_lista(data["array"])
         
         controls = ft.Column(
-            controls=[nome_tabela,ano, pesquisa, enviar_dados,salva],
+            controls=[nome_tabela,ano, pesquisa, enviar_dados,salva,dlg_modal],
             spacing=30,
             )
                     
@@ -189,11 +190,9 @@ def main(page: ft.Page):
 
         try:
             page.remove(centralizar_verticalmente)
-            #print("ent")
             att(data)
             
         except(ValueError):
-            #print('sai')
             att(data)
 
 
@@ -213,16 +212,25 @@ def main(page: ft.Page):
                     data = verifica.verifica_despesa(valor_nome, valor_ano, valor_pesquisa)
 
                     if data == FileNotFoundError:
-                        erro_nome()
+                        dlg_modal.title = ft.Text("ERRO AO BUSCAR TABELA", color='red')
+                        dlg_modal.content = ft.Text("Verifique se os nomes na parte de busca estão corretos e se existem essas pastas")
+                        dlg_modal.open = True
+                        page.update()
 
                     else:
                         cria_scroll(data)
                 except(FileNotFoundError):
-                    erro_nome()
+                    dlg_modal.title = ft.Text("ERRO AO BUSCAR TABELA", color='red')
+                    dlg_modal.content = ft.Text("Verifique se os nomes na parte de busca estão corretos e se existem essas pastas")
+                    dlg_modal.open = True
+                    page.update()
         
         
         except(ValueError):
-            erro_nome()
+            dlg_modal.title = ft.Text("ERRO AO BUSCAR TABELA", color='red')
+            dlg_modal.content = ft.Text("Verifique se os nomes na parte de busca estão corretos e se existem essas pastas")
+            dlg_modal.open = True
+            page.update()
     
     
     page.title = "Verifica Tabelas"
@@ -267,6 +275,20 @@ def main(page: ft.Page):
                                      bgcolor='blue',
                                      color='white')
     
+    dlg_modal = ft.AlertDialog(
+                modal=True,
+                title=ft.Text("ERRO AO GERAR PDF",color='red'),
+                content=ft.Text("Verifique se os nomes das tabelas estão corretos!"),
+                actions=[
+                    ft.ElevatedButton(
+                        text="OK",
+                        on_click=retira_modal,
+                    )
+                ],
+                actions_alignment=ft.MainAxisAlignment.END,
+                open=False
+            )
+    
     centralizar_verticalmente = ft.Column(
         [
             nome_tabela,
@@ -282,6 +304,7 @@ def main(page: ft.Page):
     )
 
     page.add(centralizar_verticalmente)
+    page.add(dlg_modal)
 
     page.update()
 
