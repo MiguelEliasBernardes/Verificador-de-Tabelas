@@ -60,7 +60,7 @@ def verifica_despesa(nome_tabela,ano,valor_pesquisa):
                         total_despesa += valor_2
                         #print(f"{linha.iloc[1]} - R$ {valor_2}")
                         arr.append({"nome_dado": linha.iloc[1],
-                                    "valor_dado":f"R$ {valor_5:,.2f}".replace(',', 'TEMP').replace('.', ',').replace('TEMP', '.')})
+                                    "valor_dado":f"R$ {valor_2:,.2f}".replace(',', 'TEMP').replace('.', ',').replace('TEMP', '.')})
                    
                                      
         total = f"{total_despesa:,.2f}"

@@ -6,6 +6,7 @@ from reportlab.lib.pagesizes import A4
 from reportlab.fonts import *
 import getpass
 import os
+import customtkinter as ctk
 
 
 def main(page: ft.Page):
@@ -213,12 +214,12 @@ def main(page: ft.Page):
     page.title = "Verifica Tabelas"
     page.theme_mode = ft.ThemeMode.DARK
     
+    page.window_icon = 'tabela2.ico'
+    page.window_resizable = False
     page.padding = 50
     page.window_width = 1024
     page.window_height = 700
     page.window_center()
-
-    
     
     nome_tabela = ft.TextField(
         label="Nome Tabela",
