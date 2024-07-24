@@ -99,7 +99,7 @@ def main(page: ft.Page):
             expand=False,
         )
 
-        if data["total"] == "TOTAL = R$ 0":
+        if data["total"] == "0.00":
                 scroll_container.controls.append(ft.Text("Nenhum dado com esse nome!",size=25))
                 
                 texto_total = ft.Text(
